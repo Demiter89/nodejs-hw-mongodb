@@ -10,7 +10,12 @@ export const setupServer = () => {
   app.use(morgan('dev'));
   app.use(express.json());
 
+  // ✅ Додай кореневий маршрут
+  app.get('/', (req, res) => {
+    res.send('API is running!');
+  });
+
   app.use('/api/contacts', contactsRouter);
 
-  return app;  // Повертаємо сам app, але не запускаємо сервер тут
+  return app;
 };
