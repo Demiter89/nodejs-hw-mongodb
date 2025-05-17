@@ -6,7 +6,13 @@ import { setupServer } from './server.js';
 
 const startApp = async () => {
   await initMongoConnection();
-  setupServer();
+
+  const app = setupServer();
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 };
 
 startApp();
