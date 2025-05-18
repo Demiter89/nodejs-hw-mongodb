@@ -27,4 +27,5 @@ const contactSchema = new mongoose.Schema(
   { timestamps: true } // додає createdAt та updatedAt
 );
 
-export const Contact = mongoose.model('Contact', contactSchema);
+const Contact = mongoose.model('Contact', contactSchema);
+export default Contact;
