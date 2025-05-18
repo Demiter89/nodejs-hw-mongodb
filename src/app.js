@@ -9,6 +9,5 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/contacts', contactsRouter); // підключення маршрутів
-
+app.use('/contacts', contactsRouter);
 export default app;
