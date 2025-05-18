@@ -1,4 +1,4 @@
-import { Contact } from '../models/contactModel.js';
+import Contact from '../models/contactModel.js';
 import { getAllContactsService } from '../services/contacts.js';
 
 // GET all contacts
