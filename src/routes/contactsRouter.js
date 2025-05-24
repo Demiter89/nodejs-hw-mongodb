@@ -1,18 +1,14 @@
 import express from 'express';
 import {
-  getAllContacts,
-  getContactById,
-  createContact,
-  updateContact,
-  deleteContact
+  handleGetAllContacts,
+  handleGetContactById,
+  handleCreateContact, // 
 } from '../controllers/contactsController.js';
 
 const router = express.Router();
 
-router.get('/', getAllContacts);
-router.get('/:contactId', getContactById); 
-router.post('/', createContact);
-router.put('/:contactId', updateContact); 
-router.delete('/:contactId', deleteContact); 
+router.get('/', handleGetAllContacts);
+router.get('/:contactId', handleGetContactById);
+router.post('/', handleCreateContact); 
 
 export default router;

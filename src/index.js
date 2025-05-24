@@ -1,17 +1,14 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-import { initMongoConnection } from './db/initMongoConnection.js';
 import { setupServer } from './server.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 
 const startApp = async () => {
-  await initMongoConnection(); // з'єднання з MongoDB
-  const app = setupServer();   // створення інстансу сервера
-
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+  try {
+    await initMongoConnection();
+    setupServer();
+  } catch (err) {
+    console.error('Не вдалося запустити додаток:', err);
+    process.exit(1);
+  }
 };
 
 startApp();
