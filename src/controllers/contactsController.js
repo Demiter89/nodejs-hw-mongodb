@@ -9,11 +9,19 @@ import {
 
 export const handleGetAllContacts = async (req, res, next) => {
   try {
-    const contacts = await getAllContacts();
+    const { page, perPage, sortBy, sortOrder } = req.query;
+
+    const contactsData = await getAllContacts({
+      page,
+      perPage,
+      sortBy,
+      sortOrder,
+    });
+
     res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts,
+      data: contactsData,
     });
   } catch (error) {
     next(error);
@@ -86,3 +94,4 @@ export const handleDeleteContactById = async (req, res, next) => {
     next(error);
   }
 };
+
