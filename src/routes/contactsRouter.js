@@ -5,12 +5,11 @@ import {
   createContactController,
   patchContactController,
   deleteContactController,
-} from '../controllers/contactsControllers.js';
+} from '../controllers/contactsController.js'; // ← contactsController, не contactsControllers
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { createContactSchema } from '../validation/contactsValidation.js';
+import { createContactSchema, updateContactSchema } from '../validation/contactsValidation.js';
 import { isValidId } from '../middlewares/isValidId.js';
-import { updateContactSchema } from '../validation/contactsValidation.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
