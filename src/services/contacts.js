@@ -1,66 +1,63 @@
-import Contact from '../models/contactModel.js';
+import { Contact } from '../db/models/contact.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+import { SORT_ORDER } from '../index.js';
 
-export const getAllContacts = async (query) => {
-  const {
-    page = 1,
-    perPage = 10,
-    sortBy = 'name',
-    sortOrder = 'asc',
-    type,
-    isFavourite,
-  } = query;
+export const getAllContacts = async ({
+  page,
+  perPage,
+  sortBy = 'name',
+  sortOrder = SORT_ORDER.ASC,
+  filter = {},
+  userId,
+}) => {
+  page = Number(page);
+  perPage = Number(perPage);
 
   const skip = (page - 1) * perPage;
-  const sortDirection = sortOrder === 'desc' ? -1 : 1;
+  const finalFilter = { ...filter, userId };
 
-  // Створюємо динамічний фільтр
-  const filter = {};
+  const totalItems = await Contact.countDocuments(finalFilter);
 
-  if (type) {
-    filter.contactType = type;
-  }
-
-  if (isFavourite !== undefined) {
-    // Перетворюємо string у boolean
-    filter.isFavourite = isFavourite === 'true';
-  }
-
-  const [data, totalItems] = await Promise.all([
-    Contact.find(filter)
-      .sort({ [sortBy]: sortDirection })
-      .skip(skip)
-      .limit(Number(perPage)),
-    Contact.countDocuments(filter),
-  ]);
-
-  const totalPages = Math.ceil(totalItems / perPage);
-
-  return {
-    data,
-    page: Number(page),
-    perPage: Number(perPage),
+  const contacts = await Contact.find(finalFilter)
+    .skip(skip)
+    .limit(perPage)
+    .sort({ [sortBy]: sortOrder === SORT_ORDER.ASC ? 1 : -1 })
+    .exec();
+  const paginationData = calculatePaginationData({
+    perPage,
+    page,
     totalItems,
-    totalPages,
-    hasPreviousPage: page > 1,
-    hasNextPage: page < totalPages,
+  });
+  return {
+    data: contacts,
+    ...paginationData,
   };
 };
-
-
-export const getContactById = async (contactId) => {
-  return await Contact.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  return await Contact.findOneAndUpdate({ _id: contactId, userId });
 };
 
-export const createContact = async (data) => {
-  const newContact = await Contact.create(data);
+export const createContact = async (contactData) => {
+  const newContact = await Contact.create(contactData);
   return newContact;
 };
+export const patchContact = async (contactId, updateData, userId) => {
+  const updatedContact = await Contact.findOneAndUpdate(
+    { _id: contactId, userId },
+    updateData,
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
 
-export const updateContactById = async (contactId, data) => {
-  return await Contact.findByIdAndUpdate(contactId, data, { new: true });
+  return updatedContact;
 };
+export const deleteContact = async (contactId, userId) => {
+  const contact = await Contact.findOneAndDelete({
+    _id: contactId,
+    userId,
+  });
 
-export const deleteContactById = async (contactId) => {
-  const deletedContact = await Contact.findByIdAndDelete(contactId);
-  return deletedContact; // якщо не знайдено — буде null
+  return contact;
 };
