@@ -34,14 +34,14 @@ export const authenticate = async (req, res, next) => {
     return;
   }
 
-  const user = await UsersCollection.findById(session.userId);
+  const user = await UsersCollection.findOne({ _id: session.userId });
 
-  if (!user) {
+  if (user === null) {
     next(createHttpError(401, 'User not found'));
     return;
   }
 
-  req.user = user;
+  req.user = { _id: user._id, name: user.name};
 
   next();
 };

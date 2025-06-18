@@ -1,33 +1,45 @@
-import express from 'express';
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
-
-import authRouter from './routes/authRouter.js';
-import contactsRouter from './routes/contactsRouter.js'; // ✅ правильний файл
+dotenv.config();
+import express from 'express';
+import pino from 'pino-http';
+import cors from 'cors';
 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
-dotenv.config();
+import contactsRouter from './routes/contactsRouter.js';
+import cookieParser from 'cookie-parser';
+import authRouter from './routes/authRouter.js';
+
+import { UPLOAD_DIR } from './constants/index.js';
+
+const PORT = process.env.PORT || 3000;
 
 export const setupServer = () => {
   const app = express();
-  const PORT = process.env.PORT || 3000;
 
   app.use(express.json());
+  app.use(cors());
   app.use(cookieParser());
 
-  // Роути
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.get('/', (req, res) => {
+    res.send('API is running ✅');
+  });
   app.use('/auth', authRouter);
-  app.use('/contacts', contactsRouter); // ✅ підключення маршруту для контактів
+  app.use('/contacts', contactsRouter);
 
-  // Обробка помилки 404
+  app.use(errorHandler);
   app.use(notFoundHandler);
 
-  // Централізована обробка помилок
-  app.use(errorHandler);
-
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server is running on ${PORT}`);
   });
 };

@@ -1,12 +1,12 @@
-import { Contact } from '../db/models/contact.js';
+import { ContactsCollection } from '../db/models/contact.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
-import { SORT_ORDER } from '../index.js';
+
 
 export const getAllContacts = async ({
   page,
   perPage,
   sortBy = 'name',
-  sortOrder = SORT_ORDER.ASC,
+  sortOrder,
   filter = {},
   userId,
 }) => {
@@ -16,12 +16,12 @@ export const getAllContacts = async ({
   const skip = (page - 1) * perPage;
   const finalFilter = { ...filter, userId };
 
-  const totalItems = await Contact.countDocuments(finalFilter);
+  const totalItems = await ContactsCollection.countDocuments(finalFilter);
 
-  const contacts = await Contact.find(finalFilter)
+  const contacts = await ContactsCollection.find(finalFilter)
     .skip(skip)
     .limit(perPage)
-    .sort({ [sortBy]: sortOrder === SORT_ORDER.ASC ? 1 : -1 })
+    .sort({ [sortBy]: sortOrder })
     .exec();
   const paginationData = calculatePaginationData({
     perPage,
@@ -34,15 +34,15 @@ export const getAllContacts = async ({
   };
 };
 export const getContactById = async (contactId, userId) => {
-  return await Contact.findOneAndUpdate({ _id: contactId, userId });
+  return await ContactsCollection.findOne({ _id: contactId, userId });
 };
 
 export const createContact = async (contactData) => {
-  const newContact = await Contact.create(contactData);
+  const newContact = await ContactsCollection.create(contactData);
   return newContact;
 };
-export const patchContact = async (contactId, updateData, userId) => {
-  const updatedContact = await Contact.findOneAndUpdate(
+export const patchContact = async (contactId, userId, updateData) => {
+  const updatedContact = await ContactsCollection.findOneAndUpdate(
     { _id: contactId, userId },
     updateData,
     {
@@ -54,7 +54,7 @@ export const patchContact = async (contactId, updateData, userId) => {
   return updatedContact;
 };
 export const deleteContact = async (contactId, userId) => {
-  const contact = await Contact.findOneAndDelete({
+  const contact = await ContactsCollection.findOneAndDelete({
     _id: contactId,
     userId,
   });
