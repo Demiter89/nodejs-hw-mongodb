@@ -4,10 +4,11 @@ import { getEnvVar } from './getEnvVar.js';
 
 const transporter = nodemailer.createTransport({
   host: getEnvVar('SMTP_HOST'),
+  secure:false,
   port: Number(getEnvVar('SMTP_PORT')),
   auth: {
-    user: getEnvVar('SMTP_USER'),
-    pass: getEnvVar('SMTP_PASSWORD'),
+    user: getEnvVar('SMTP_AUTH_USER'),
+    pass: getEnvVar('SSMTP_AUTH_PASSWORD'),
   },
   
 });
