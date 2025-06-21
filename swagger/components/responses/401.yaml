@@ -1,0 +1,15 @@
+description: Unauthorized – authentication failed or was not provided
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: 'error'
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: 'Unauthorized: missing or invalid token'
