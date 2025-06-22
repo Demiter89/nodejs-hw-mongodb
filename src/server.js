@@ -12,7 +12,7 @@ import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRouter.js';
 
 import { UPLOAD_DIR } from './constants/index.js';
-
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 const PORT = process.env.PORT || 3000;
 
 export const setupServer = () => {
@@ -35,6 +35,7 @@ export const setupServer = () => {
   });
   app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
+  app.use('/api-docs', swaggerDocs());
 
   app.use(errorHandler);
   app.use(notFoundHandler);
