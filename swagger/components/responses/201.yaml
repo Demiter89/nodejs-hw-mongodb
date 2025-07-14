@@ -4,8 +4,11 @@ content:
     schema:
       type: object
       properties:
+        status:
+          type: integer
+          example: 201
         message:
           type: string
           example: Contact created successfully
-        contact:
+        data:
           $ref: ../schemas/contact.yaml

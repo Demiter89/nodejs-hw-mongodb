@@ -61,8 +61,8 @@ parameters:
 
 responses:
   '200':
-    $ref: '../../components/responses/200 get contacts.yaml'
+    $ref: '../../components/responses/200-get-contacts.yaml'
   '401':
-    $ref: ../../components/responses/401.yaml
+    $ref: '../../components/responses/401.yaml'
   '404':
     $ref: '../../components/responses/404.yaml'
