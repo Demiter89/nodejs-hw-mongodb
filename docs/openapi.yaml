@@ -5,13 +5,15 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: This is a documentation of contacts app
+  description: |
+    This is a documentation of contacts app.
+    It allows managing your personal contact list.
 tags:
   - name: Contacts
     description: Operations with contacts.
 servers:
-  - url: http://127.0.0.1:3000/api-docs
-  - url: https://nodejs-hw-mongodb-3z6d.onrender.com
+  - url: http://127.0.0.1:3000/api
+  - url: https://nodejs-hw-mongodb-3z6d.onrender.com/api
 paths:
   /contacts:
     get:
@@ -30,3 +32,5 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+security:
+  - bearerAuth: []
